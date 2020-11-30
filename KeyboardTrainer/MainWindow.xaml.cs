@@ -35,7 +35,7 @@ namespace KeyboardTrainer
 
             sliderDiff.Minimum = 1;
             sliderDiff.Maximum = 10;
-
+            btnStop.IsEnabled = false;
 
         }
 
@@ -56,9 +56,26 @@ namespace KeyboardTrainer
             return mas;
         }
 
+        private void EnableButtons(bool is_start)
+        {
+            if (is_start)
+            {
+                btnStart.IsEnabled = false;
+                btnStop.IsEnabled = true;
+                btnStart.Opacity = 0.5;
+                btnStop.Opacity = 1.0;
+            }
+            else
+            {
+                btnStart.IsEnabled = true;
+                btnStop.IsEnabled = false;
+                btnStart.Opacity = 1.0;
+                btnStop.Opacity = 0.5;
+            }
+        }
+
         private void btnStart_Click(object sender, RoutedEventArgs e)
         {
-            btnStart.Opacity = 0.5;
             int sizeDiff = Convert.ToInt32(txtDiff.Text);
             int k = 0;
             int[] mas = randArray(sizeDiff);
@@ -73,6 +90,19 @@ namespace KeyboardTrainer
                 step++;
                 k++;
             }
+            EnableButtons(true);
+        }
+
+        private void btnStop_Click(object sender, RoutedEventArgs e)
+        {
+            txtBlockUp.Text = "";
+            sliderDiff.Value = 1;
+            EnableButtons(false);
+        }
+
+        private void bdr_KeyDown(object sender, KeyEventArgs e)
+        {
+            bdrSpace.Opacity = 0.5;
         }
     }
 }

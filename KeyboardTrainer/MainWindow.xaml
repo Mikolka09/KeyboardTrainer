@@ -56,7 +56,7 @@
                     <ColumnDefinition/>
                 </Grid.ColumnDefinitions>
                 <Button x:Name="btnStart" Grid.Column="0" Click="btnStart_Click">Start</Button>
-                <Button x:Name="btnStop" Grid.Column="1" Margin="5,0,0,0">Stop</Button>
+                <Button x:Name="btnStop" Grid.Column="1" Margin="5.4,0,0.4,0" Height="19" VerticalAlignment="Bottom" Click="btnStop_Click">Stop</Button>
             </Grid>
         </Grid>
         <Grid Grid.Row="2" Margin="2">
@@ -387,7 +387,7 @@
             <StackPanel x:Name="PanelDown">
                 <StackPanel Orientation="Horizontal">
                     <Grid Height="50" Width="50">
-                        <Border x:Name="bdrAps" Background="#FFF07795" BorderBrush="Black" BorderThickness="2" CornerRadius="10" Margin="2">
+                        <Border x:Name="bdrAps" Background="#FFF07795" BorderBrush="Black" BorderThickness="2" CornerRadius="10" Margin="2" KeyDown="bdr_KeyDown">
                             <TextBlock FontSize="30" HorizontalAlignment="Center" Text="`" VerticalAlignment="Center"/>
                         </Border>
                     </Grid>
@@ -675,7 +675,7 @@
                         </Border>
                     </Grid>
                     <Grid Height="50" Width="294">
-                        <Border x:Name="bdrSpace" Background="#FFE5BB72" BorderBrush="Black" BorderThickness="2" CornerRadius="10" Margin="2">
+                        <Border x:Name="bdrSpace" Background="#FFE5BB72" BorderBrush="Black" BorderThickness="2" CornerRadius="10" Margin="2" KeyDown="bdr_KeyDown">
                             <TextBlock FontSize="15" HorizontalAlignment="Center" Text="Space" VerticalAlignment="Center"/>
                         </Border>
                     </Grid>
