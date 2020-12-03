@@ -23,6 +23,10 @@ namespace KeyboardTrainer
         DispatcherTimer timer = null;
         int tempTimer = 0;
         int fails = 0;
+        int chars = 0;
+        bool isEnd = true;
+        int length = 0;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -111,15 +115,63 @@ namespace KeyboardTrainer
                 step++;
                 k++;
             }
+            length = txtBlockUp.Text.Length;
             tempTimer = 0;
+            timer.Start();
             EnableButtons(true);
         }
 
         private void btnStop_Click(object sender, RoutedEventArgs e)
         {
             txtBlockUp.Text = "";
+            txtBlockUpRight.Text = "";
+            txtBlockDownRight.Text = "";
             sliderDiff.Value = 1;
+            timer.Stop();
+            txtFails.Text = "0";
+            txtSpeed.Text = "0";
+            checkCase.IsChecked = false;
             EnableButtons(false);
+        }
+
+        private void goTrainer()
+        {
+            if (txtBlockDown.Text.Length != 0)
+            {
+                char[] stUp = new char[txtBlockUp.Text.Length];
+                stUp = txtBlockUp.Text.ToCharArray();
+                char[] stDown = new char[txtBlockDown.Text.Length];
+                stDown = txtBlockDown.Text.ToCharArray();
+                int i = 0;
+                while (i < txtBlockDown.Text.Length)
+                {
+                    if (stDown[i] == stUp[i])
+                    {
+                        txtBlockUp.Text = txtBlockUp.Text.Remove(0, 1);
+                        txtBlockUpRight.Text += stUp[i].ToString();
+                        txtBlockDown.Text = txtBlockDown.Text.Remove(0, 1);
+                        txtBlockDownRight.Text += stDown[i].ToString();
+                        chars++;
+                    }
+                    else
+                    {
+                        fails++;
+                        txtFails.Text = fails.ToString();
+                    }
+                    i++;
+                }
+            }
+            if (txtBlockDownRight.Text.Length == length && txtBlockDownRight.Text.Length != 0)
+            {
+                timer.Stop();
+                isEnd = false;
+                Speed();
+            }
+        }
+
+        void Speed()
+        {
+            txtSpeed.Text = Math.Round(((double)txtBlockDownRight.Text.Length / tempTimer) * 60).ToString();
         }
 
         private void MainWindow_KeyDown(object sender, KeyEventArgs e)
@@ -340,20 +392,18 @@ namespace KeyboardTrainer
                     }
                     break;
                 case Key.A:
-                    if (e.KeyboardDevice.Modifiers == ModifierKeys.Shift && Keyboard.IsKeyToggled(Key.CapsLock))
-                    {
-                        bdrA.Opacity = 0.5;
-                        txtBlockDown.Text += Convert.ToChar(Convert.ToChar(e.Key.ToString()) + 32);
-                    }
-                    else if (e.KeyboardDevice.Modifiers == ModifierKeys.Shift && e.Key != Key.LeftShift || Keyboard.IsKeyToggled(Key.CapsLock))
+                    if (e.KeyboardDevice.Modifiers == ModifierKeys.Shift && e.Key != Key.LeftShift || Keyboard.IsKeyToggled(Key.CapsLock))
                     {
                         bdrAUp.Opacity = 0.5;
                         txtBlockDown.Text += e.Key.ToString();
                     }
-                    else if (e.Key != Key.LeftShift)
+                    else
                     {
-                        bdrA.Opacity = 0.5;
-                        txtBlockDown.Text += Convert.ToChar(Convert.ToChar(e.Key.ToString()) + 32);
+                        if (e.Key != Key.LeftShift)
+                        {
+                            bdrA.Opacity = 0.5;
+                            txtBlockDown.Text += Convert.ToChar(Convert.ToChar(e.Key.ToString()) + 32);
+                        }
                     }
                     break;
                 case Key.B:
@@ -970,7 +1020,7 @@ namespace KeyboardTrainer
                 default:
                     break;
             }
-
+            goTrainer();
         }
 
 
@@ -1065,9 +1115,7 @@ namespace KeyboardTrainer
                         bdr9.Opacity = 1;
                     break;
                 case Key.A:
-                    if (e.KeyboardDevice.Modifiers == ModifierKeys.Shift && Keyboard.IsKeyToggled(Key.CapsLock))
-                        bdrA.Opacity = 1;
-                    else if (e.KeyboardDevice.Modifiers == ModifierKeys.Shift && e.Key != Key.LeftShift || Keyboard.IsKeyToggled(Key.CapsLock))
+                    if (e.KeyboardDevice.Modifiers == ModifierKeys.Shift && e.Key != Key.LeftShift || Keyboard.IsKeyToggled(Key.CapsLock))
                         bdrAUp.Opacity = 1;
                     else if (e.Key != Key.LeftShift)
                         bdrA.Opacity = 1;
@@ -1361,13 +1409,24 @@ namespace KeyboardTrainer
                 default:
                     break;
             }
-
+            if (!isEnd)
+            {
+                MessageBox.Show($"Задание завершенно!\n Количество символов - {chars}.\n " +
+                    $"Количество ошибок - {fails}.\n Скорость печати - {txtSpeed.Text} симв./мин.\n" +
+                    $"Для завершения задания нажмите - Stop.",
+                    "Сообщение", MessageBoxButton.OK, MessageBoxImage.Information);
+                isEnd = true;
+            }
         }
 
-
-        void Speed()
+        private void checkCase_Checked(object sender, RoutedEventArgs e)
         {
-            txtSpeed.Text = Math.Round(((double)txtBlockDownRight.Text.Length / tempTimer) * 60).ToString();
+            sliderDiff.Maximum = 20;
+        }
+
+        private void checkCase_Unchecked(object sender, RoutedEventArgs e)
+        {
+            sliderDiff.Maximum = 10;
         }
     }
 }
