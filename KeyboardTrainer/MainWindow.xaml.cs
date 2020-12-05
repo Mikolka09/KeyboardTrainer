@@ -53,10 +53,11 @@ namespace KeyboardTrainer
             }
 
             sliderDiff.Minimum = 1;
-            sliderDiff.Maximum = 10;
+            sliderDiff.Maximum = 5;
             btnStop.IsEnabled = false;
 
         }
+
 
         private void Timer_Tick(object sender, EventArgs e)
         {
@@ -126,6 +127,7 @@ namespace KeyboardTrainer
             txtBlockUp.Text = "";
             txtBlockUpRight.Text = "";
             txtBlockDownRight.Text = "";
+            txtBlockDown.Text = "";
             sliderDiff.Value = 1;
             timer.Stop();
             txtFails.Text = "0";
@@ -136,7 +138,7 @@ namespace KeyboardTrainer
 
         private void goTrainer()
         {
-            if (txtBlockDown.Text.Length != 0)
+            if (txtBlockUp.Text != "")
             {
                 char[] stUp = new char[txtBlockUp.Text.Length];
                 stUp = txtBlockUp.Text.ToCharArray();
@@ -1421,12 +1423,12 @@ namespace KeyboardTrainer
 
         private void checkCase_Checked(object sender, RoutedEventArgs e)
         {
-            sliderDiff.Maximum = 20;
+            sliderDiff.Maximum = 8;
         }
 
         private void checkCase_Unchecked(object sender, RoutedEventArgs e)
         {
-            sliderDiff.Maximum = 10;
+            sliderDiff.Maximum = 5;
         }
     }
 }
